@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>d160742f-03d8-442f-887a-4277e2a4bbd9</ProjectGuid>
+    <ProjectGuid>{EFF9AEF8-F587-4497-866C-DF48F1AC185C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Moriyama.Cloud.Tests</RootNamespace>
@@ -36,6 +36,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -50,8 +51,18 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="UnitTest1.cs" />
+    <Compile Include="TestResourceReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestSql.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Moriyama.Cloud\Moriyama.Cloud.csproj">
+      <Project>{3519b2b4-05c4-400e-b99c-fa99cb6f491d}</Project>
+      <Name>Moriyama.Cloud</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

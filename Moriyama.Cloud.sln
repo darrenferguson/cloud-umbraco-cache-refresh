@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moriyama.Cloud", "Moriyama.Cloud\Moriyama.Cloud.csproj", "{3519B2B4-05C4-400E-B99C-FA99CB6F491D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moriyama.Cloud.Tests", "Moriyama.Cloud.Tests\Moriyama.Cloud.Tests.csproj", "{EFF9AEF8-F587-4497-866C-DF48F1AC185C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,10 @@ Global
 		{3519B2B4-05C4-400E-B99C-FA99CB6F491D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3519B2B4-05C4-400E-B99C-FA99CB6F491D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3519B2B4-05C4-400E-B99C-FA99CB6F491D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EFF9AEF8-F587-4497-866C-DF48F1AC185C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EFF9AEF8-F587-4497-866C-DF48F1AC185C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EFF9AEF8-F587-4497-866C-DF48F1AC185C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EFF9AEF8-F587-4497-866C-DF48F1AC185C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

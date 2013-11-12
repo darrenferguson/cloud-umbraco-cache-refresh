@@ -1,0 +1,1 @@
+﻿delete from MoriyamaHosts where AccessTime < @AccessTime
