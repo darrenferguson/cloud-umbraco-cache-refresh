@@ -1,4 +1,4 @@
-﻿IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[MoriyamaHosts]') AND type in (N'U'))
+﻿IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[MoriyamaHosts]') AND type in (N'U'))
 	BEGIN
 		CREATE TABLE MoriyamaHosts(
 			[HostId] [nvarchar](50)  NOT NULL,
@@ -9,7 +9,7 @@
 			))
 	END;
 
-IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[MoriyamaPublishes]') AND type in (N'U'))
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[MoriyamaPublishes]') AND type in (N'U'))
 	BEGIN
 		CREATE TABLE MoriyamaPublishes(
 			[PublishId] uniqueidentifier NOT NULL,
