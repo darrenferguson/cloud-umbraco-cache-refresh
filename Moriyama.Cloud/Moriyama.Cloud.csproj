@@ -192,6 +192,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="StarupHandler.cs" />
+    <Compile Include="Umbraco\Application\Module\UmbracoCacheRefreshingHttpModule.cs" />
     <Compile Include="Umbraco\Application\SqlBackedServerInstanceService.cs" />
     <Compile Include="Umbraco\Event\PublishEvent.cs" />
     <Compile Include="Umbraco\Helper\TextResourceReader.cs" />
@@ -222,7 +223,25 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Umbraco\Sql\Publish.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Umbraco\Sql\RefreshCache.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Umbraco\Sql\DeletePublishes.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>XCOPY "$(TargetDir)Moriyama.Cloud.*" "C:\inetpub\wwwroot\specialsauce\bin" /Y /R</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

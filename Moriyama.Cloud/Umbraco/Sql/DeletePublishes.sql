@@ -1,0 +1,1 @@
+﻿Delete from MoriyamaPublishes where PublishId in (@Publishes)

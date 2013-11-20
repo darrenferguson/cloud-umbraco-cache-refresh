@@ -1,4 +1,6 @@
-﻿IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[MoriyamaHosts]') AND type in (N'U'))
+﻿Begin Transaction
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[MoriyamaHosts]') AND type in (N'U'))
 	BEGIN
 		CREATE TABLE MoriyamaHosts(
 			[HostId] [nvarchar](50)  NOT NULL,
@@ -12,13 +14,13 @@
 IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[MoriyamaPublishes]') AND type in (N'U'))
 	BEGIN
 		CREATE TABLE MoriyamaPublishes(
-			[PublishId] uniqueidentifier NOT NULL,
 			[DocumentId] [int] NOT NULL,
 			[PublishTime] [datetime] NOT NULL,
 			[HostId] [nvarchar](50) NOT NULL,
+			[PublishId] [UniqueIdentifier] NOT NULL,
 		CONSTRAINT [PK_dbo.Publishes] PRIMARY KEY CLUSTERED 
 		(
-			[PublishId] ASC
+			HostId, DocumentId
 		));
 
 		
@@ -28,5 +30,6 @@ IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Moriyama
 
 	END;
 
+Commit Transaction
 
 

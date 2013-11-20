@@ -1,0 +1,1 @@
+﻿select * from Moriyamapublishes where hostId = @HostId order by PublishTime asc

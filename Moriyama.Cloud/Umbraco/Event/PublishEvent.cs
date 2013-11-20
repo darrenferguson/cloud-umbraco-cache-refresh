@@ -1,4 +1,5 @@
 ﻿using System;
+using Moriyama.Cloud.Umbraco.Application;
 using Umbraco.Core;
 using Umbraco.Core.Events;
 using Umbraco.Core.Logging;
@@ -15,7 +16,7 @@ namespace Moriyama.Cloud.Umbraco.Event
             ContentService.Published += ContentServicePublished;
         }
 
-        void ContentServicePublished(IPublishingStrategy sender, PublishEventArgs<IContent> e)
+        static void ContentServicePublished(IPublishingStrategy sender, PublishEventArgs<IContent> e)
         {
             var host = Environment.MachineName;
 
@@ -24,6 +25,8 @@ namespace Moriyama.Cloud.Umbraco.Event
             foreach (var document in e.PublishedEntities)
             {
                 LogHelper.Info(typeof(PublishEvent), "Host " + host + " is publishing document " + document.Id);
+                SqlBackedServerInstanceService.Instance.Publish(host, document.Id);
+
             }
 
         }
