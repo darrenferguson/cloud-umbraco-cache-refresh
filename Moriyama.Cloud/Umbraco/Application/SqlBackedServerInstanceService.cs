@@ -5,6 +5,10 @@ using System.Data.SqlClient;
 using Moriyama.Cloud.Umbraco.Helper;
 using Moriyama.Cloud.Umbraco.Interfaces.Application;
 using Umbraco.Core.Logging;
+using Umbraco.Core;
+using Umbraco.Core.Models;
+using Umbraco.Core.Services;
+using umbraco;
 
 namespace Moriyama.Cloud.Umbraco.Application
 {
@@ -81,8 +85,7 @@ namespace Moriyama.Cloud.Umbraco.Application
                 var identifier = (Guid) publishes["PublishId"];
 
                 // do the actual cache refresh here!
-
-
+              umbraco.library.UpdateDocumentCache(documentId);
                 processedPublishses.Add(identifier);
             }
             publishes.Close();

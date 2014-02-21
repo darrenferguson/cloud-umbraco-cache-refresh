@@ -1,23 +1,30 @@
 ﻿Begin Transaction
+IF OBJECT_ID('tempdb..#hosts') IS NOT NULL
+    DROP TABLE #hosts
 
-  Declare @HostId nvarchar(50)
+CREATE TABLE #hosts ([HostId] nvarchar(50))
 
-  Select distinct HostId into #hosts from MoriyamaHosts where HostId <> @PublishingHost
+Declare @HostId nvarchar(50)
+/*Declare @DocumentId int*/
+
+--INSERT INTO #hosts (HostId) values (@HostId)
+INSERT INTO #hosts (HostId)
+  Select distinct HostId from MoriyamaHosts where HostId <> @PublishingHost
   
   While (Select Count(*) From #hosts) > 0
 	Begin
 		Select Top 1 @HostId = HostId From #hosts
 
-	IF (NOT EXISTS(SELECT * FROM MoriyamaPublishes WHERE HostId = @HostId And DocumentId = @DocumentId)) 
-	Begin
+		IF (NOT EXISTS(SELECT * FROM MoriyamaPublishes WHERE HostId = @HostId And DocumentId = @DocumentId)) 
+			Begin
 
-    	Insert Into MoriyamaPublishes 
-    		(DocumentId, PublishTime, HostId, PublishId)
-    	Values
-    		(@DocumentId, GETDATE(), @HostId, NewId())
-	End
+    		INSERT INTO MoriyamaPublishes 
+    			(DocumentId, PublishTime, HostId, PublishId)
+    		Values
+    			(@DocumentId, GETDATE(), @HostId, NewId())
+		End
 		
-		Delete #hosts Where HostId = @HostId
+		DELETE FROM #hosts Where HostId = @HostId
     
 	End
 
