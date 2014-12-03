@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.Linq;
 using Moriyama.Cloud.Umbraco.Helper;
 using Moriyama.Cloud.Umbraco.Interfaces.Application;
+using umbraco.BusinessLogic;
 using Umbraco.Core.Logging;
-using Umbraco.Core;
-using Umbraco.Core.Models;
-using Umbraco.Core.Services;
-using umbraco;
+using UmbracoCms = Umbraco;
 
 namespace Moriyama.Cloud.Umbraco.Application
 {
@@ -28,22 +27,22 @@ namespace Moriyama.Cloud.Umbraco.Application
         public void Register(string hostName)
         {
             LogHelper.Info(typeof(SqlBackedServerInstanceService), "Registering host " + hostName);
-             
+
             var connection = new SqlConnection(ConnectionString);
             connection.Open();
 
             // Create the database tables upon startup if they don't exist.
             CreateSchema(connection);
-            
+
             // Run SQL to add the host to the list of alive hosts
             RegisterHost(connection, hostName);
 
             // Cleanup any "old hosts"
             DeleteHosts(connection);
-            
+
             connection.Close();
         }
-        
+
         public void Publish(string hostName, int documentId)
         {
             var connection = new SqlConnection(ConnectionString);
@@ -53,9 +52,9 @@ namespace Moriyama.Cloud.Umbraco.Application
             var command = new SqlCommand(publishSql, connection);
             command.Parameters.AddWithValue("@DocumentId", documentId);
             command.Parameters.AddWithValue("@PublishingHost", hostName);
-            
+
             command.ExecuteNonQuery();
-            
+
             LogHelper.Info(typeof(SqlBackedServerInstanceService), "Host " + hostName + " registered the publish of " + documentId);
 
             KeepAlive(connection, hostName);
@@ -81,11 +80,17 @@ namespace Moriyama.Cloud.Umbraco.Application
 
             while (publishes.Read())
             {
-                var documentId = (int) publishes["DocumentId"];
-                var identifier = (Guid) publishes["PublishId"];
+                var documentId = (int)publishes["DocumentId"];
+                var identifier = (Guid)publishes["PublishId"];
 
                 // do the actual cache refresh here!
-              umbraco.library.UpdateDocumentCache(documentId);
+                var users = User.getAll();
+                var admin = users.SingleOrDefault(user => user.UserType.Alias == "admin");
+                if (admin != null)
+                {
+                    var webService = new umbraco.presentation.webservices.CacheRefresher();
+                    webService.RefreshAll(new Guid(UmbracoCms.Web.Cache.DistributedCache.PageCacheRefresherId), admin.LoginName, admin.GetPassword());
+                }
                 processedPublishses.Add(identifier);
             }
             publishes.Close();
@@ -107,7 +112,7 @@ namespace Moriyama.Cloud.Umbraco.Application
         }
 
         private void KeepAlive(SqlConnection connection, string hostName)
-        {   
+        {
             var updateHostSql = TextResourceReader.Instance.ReadResourceFile("Moriyama.Cloud.Umbraco.Sql.UpdateHost.sql");
             var command = new SqlCommand(updateHostSql, connection);
             command.Parameters.AddWithValue("@HostId", hostName);
@@ -128,7 +133,7 @@ namespace Moriyama.Cloud.Umbraco.Application
             command.Parameters.AddWithValue("@AccessTime", expired);
             command.ExecuteNonQuery();
         }
-        
+
         private void CreateSchema(SqlConnection connection)
         {
             // This will create the database tables upon first run
@@ -136,7 +141,7 @@ namespace Moriyama.Cloud.Umbraco.Application
             var command = new SqlCommand(createTableSql, connection);
             command.ExecuteNonQuery();
         }
-        
+
         private void RegisterHost(SqlConnection connection, string hostName)
         {
             var createHostSql = TextResourceReader.Instance.ReadResourceFile("Moriyama.Cloud.Umbraco.Sql.CreateHost.sql");
