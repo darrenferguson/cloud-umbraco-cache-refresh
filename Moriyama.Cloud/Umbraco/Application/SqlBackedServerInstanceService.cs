@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.Linq;
 using Moriyama.Cloud.Umbraco.Helper;
 using Moriyama.Cloud.Umbraco.Interfaces.Application;
 using umbraco.BusinessLogic;
@@ -83,10 +84,13 @@ namespace Moriyama.Cloud.Umbraco.Application
                 var identifier = (Guid)publishes["PublishId"];
 
                 // do the actual cache refresh here!
-                var user = User.GetUser(0);
-                var webService = new umbraco.presentation.webservices.CacheRefresher();
-                webService.RefreshAll(new Guid(UmbracoCms.Web.Cache.DistributedCache.PageCacheRefresherId), user.LoginName, user.GetPassword());
-//                umbraco.library.UpdateDocumentCache(documentId);
+                var users = User.getAll();
+                var admin = users.SingleOrDefault(user => user.UserType.Alias == "admin");
+                if (admin != null)
+                {
+                    var webService = new umbraco.presentation.webservices.CacheRefresher();
+                    webService.RefreshAll(new Guid(UmbracoCms.Web.Cache.DistributedCache.PageCacheRefresherId), admin.LoginName, admin.GetPassword());
+                }
                 processedPublishses.Add(identifier);
             }
             publishes.Close();
