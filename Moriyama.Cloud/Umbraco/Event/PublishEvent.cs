@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Moriyama.Cloud.Umbraco.Application;
 using Umbraco.Core;
@@ -23,6 +23,10 @@ namespace Moriyama.Cloud.Umbraco.Event
             MediaService.Deleted += (sender, args) => MediaServiceEvent(args.DeletedEntities, "delete media");
             MediaService.Saved += (sender, args) => MediaServiceEvent(args.SavedEntities, "saved media");
             MediaService.Trashed += (sender, args) => MediaServiceEvent(new List<IMedia>(new[] { args.Entity }), "delete media");
+
+            LocalizationService.SavedDictionaryItem += (sender, args) => LocalizationServiceEvent(args.SavedEntities, "saved dictionary items");
+            LocalizationService.DeletedDictionaryItem += (sender, args) => LocalizationServiceEvent(args.DeletedEntities, "deleted dictionary items");
+      
         }
 
 
@@ -51,6 +55,20 @@ namespace Moriyama.Cloud.Umbraco.Event
             {
                 LogHelper.Info(typeof(PublishEvent), "Host " + host + " requesting cache update due to " + eventName + " of media item " + mediaItem.Id);
                 SqlBackedServerInstanceService.Instance.Publish(host, mediaItem.Id);
+            }
+
+        }
+
+        static void LocalizationServiceEvent(IEnumerable<IDictionaryItem> dics, string eventName)
+        {
+            var host = Environment.MachineName;
+
+            LogHelper.Info(typeof(PublishEvent), "Host " + host + " receieved a " + eventName + " event");
+
+            foreach (var dicItem in dics)
+            {
+                LogHelper.Info(typeof(PublishEvent), "Host " + host + " requesting cache update due to " + eventName + " of dictionary item " + dicItem.Id);
+                SqlBackedServerInstanceService.Instance.Publish(host, dicItem.Id);
             }
 
         }
