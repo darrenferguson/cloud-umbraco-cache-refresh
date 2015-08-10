@@ -1,4 +1,4 @@
-﻿Begin Transaction
+Begin Transaction
 
 IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[MoriyamaHosts]') AND type in (N'U'))
 	BEGIN
@@ -18,6 +18,7 @@ IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Moriyama
 			[PublishTime] [datetime] NOT NULL,
 			[HostId] [nvarchar](50) NOT NULL,
 			[PublishId] [UniqueIdentifier] NOT NULL,
+			[RefreshType] [nvarchar](50) NOT NULL
 		CONSTRAINT [PK_dbo.Publishes] PRIMARY KEY CLUSTERED 
 		(
 			HostId, DocumentId
@@ -30,6 +31,12 @@ IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Moriyama
 
 	END;
 
+IF NOT EXISTS ( SELECT 1 FROM information_schema.COLUMNS WHERE table_schema = 'dbo' AND TABLE_NAME = 'MoriyamaPublishes' AND column_Name = 'RefreshType' )
+	BEGIN
+		ALTER TABLE MoriyamaPublishes
+		ADD [RefreshType] [nvarchar](50);	
+		Exec('UPDATE MoriyamaPublishes Set [RefreshType] = '''' WHERE [RefreshType] IS NULL');
+	END;
 Commit Transaction
 
 

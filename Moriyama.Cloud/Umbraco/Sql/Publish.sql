@@ -1,4 +1,4 @@
-﻿Begin Transaction
+Begin Transaction
 IF OBJECT_ID('tempdb..#hosts') IS NOT NULL
     DROP TABLE #hosts
 
@@ -19,9 +19,9 @@ INSERT INTO #hosts (HostId)
 			Begin
 
     		INSERT INTO MoriyamaPublishes 
-    			(DocumentId, PublishTime, HostId, PublishId)
+    			(DocumentId, PublishTime, HostId, PublishId, RefreshType)
     		Values
-    			(@DocumentId, GETDATE(), @HostId, NewId())
+    			(@DocumentId, GETDATE(), @HostId, NewId(),@RefreshType)
 		End
 		
 		DELETE FROM #hosts Where HostId = @HostId
